@@ -8,6 +8,19 @@
 #include <event2/keyvalq_struct.h>
 
 void general_request_handler(struct evhttp_request *req, void *arg) {
+    evhttp_send_error(req, 403, "Forbidden");
+}
+
+void ping_handler(struct evhttp_request *req, void *args) {
+    evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", "application/json");
+    struct evbuffer *evb = evbuffer_new();
+    evbuffer_add_printf(evb, "%s", "{\"message\":\"PING -> PONG\"}");
+    evhttp_send_reply(req, 200, "OK", evb);
+    evbuffer_free(evb);
+}
+
+void post_handler(struct evhttp_request *req, void *args) {
+
     const char *source_uri = evhttp_request_get_uri(req);
 
     /************ parse params ************/
@@ -92,13 +105,5 @@ void general_request_handler(struct evhttp_request *req, void *arg) {
     {
         // 亦可以进行异步处理过程( 异步处理reply时需要在同一个线程内返回 )
     }
-}
-
-void ping_handler(struct evhttp_request *req, void *args) {
-    evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", "application/json");
-    struct evbuffer *evb = evbuffer_new();
-    evbuffer_add_printf(evb, "%s", "{\"message\":\"PING -> PONG\"}");
-    evhttp_send_reply(req, 200, "OK", evb);
-    evbuffer_free(evb);
 }
 
