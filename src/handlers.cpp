@@ -78,7 +78,7 @@ void post_handler(struct evhttp_request *req, void *args) {
     memcpy(&body[0], evbuffer_pullup(evbuf, -1), body_len);
 
     { // 同步过程 业务逻辑处理...
-        std::string resp{"{\"message\":\"PING -> PONG  PING -> PONG  PING -> PONG  PING -> PONG  PING -> PONG  PING -> PONG  PING -> PONG  PING -> PONG\"}"};
+        std::string resp{"{\"message\":\"ok\"}"};
 
         evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", "application/json");
     
